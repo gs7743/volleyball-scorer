@@ -30,7 +30,7 @@ import {
   points,
   teamMembers,
 } from "@shared/schema";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 
@@ -146,6 +146,20 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteTeam(id: number): Promise<boolean> {
+    const teamPlayers = await db.select({ id: players.id }).from(players).where(eq(players.teamId, id));
+    const playerIds = teamPlayers.map(p => p.id);
+
+    if (playerIds.length > 0) {
+      await db.update(points).set({ scoringPlayerId: null }).where(inArray(points.scoringPlayerId, playerIds));
+      await db.update(points).set({ losingPlayerId: null }).where(inArray(points.losingPlayerId, playerIds));
+      await db.delete(matchLineups).where(inArray(matchLineups.playerId, playerIds));
+      await db.delete(substitutions).where(inArray(substitutions.playerOutId, playerIds));
+      await db.delete(substitutions).where(inArray(substitutions.playerInId, playerIds));
+      await db.delete(players).where(eq(players.teamId, id));
+    }
+
+    await db.delete(teamMembers).where(eq(teamMembers.teamId, id));
+    await db.update(matches).set({ teamId: null }).where(eq(matches.teamId, id));
     await db.delete(teams).where(eq(teams.id, id));
     return true;
   }
