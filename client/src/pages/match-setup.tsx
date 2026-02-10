@@ -15,7 +15,7 @@ import type { Tournament, Team } from "@shared/schema";
 
 export default function MatchSetupPage() {
   const [, setLocation] = useLocation();
-  const [, params] = useRoute("/tournament/:tournamentId/match/new");
+  const [, params] = useRoute("/app/tournament/:tournamentId/match/new");
   const tournamentId = params?.tournamentId ? parseInt(params.tournamentId) : 0;
   const { toast } = useToast();
   const { t, lang, toggleLang } = useI18n();
@@ -81,7 +81,7 @@ export default function MatchSetupPage() {
       const match = await res.json();
       queryClient.invalidateQueries({ queryKey: ["/api/matches"] });
       queryClient.invalidateQueries({ queryKey: ["/api/tournaments", tournamentId, "matches"] });
-      setLocation(`/match/${match.id}/score`);
+      setLocation(`/app/match/${match.id}/score`);
     } catch (err: any) {
       toast({ title: t.createFailed, description: err.message, variant: "destructive" });
     } finally {
@@ -106,7 +106,7 @@ export default function MatchSetupPage() {
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="max-w-lg mx-auto flex items-center gap-1 px-3 py-1.5">
-          <Link href={`/tournament/${tournamentId}`}>
+          <Link href={`/app/tournament/${tournamentId}`}>
             <Button variant="ghost" size="icon" data-testid="button-back">
               <ArrowLeft className="w-4 h-4" />
             </Button>

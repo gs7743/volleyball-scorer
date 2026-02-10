@@ -132,7 +132,9 @@ export default function DashboardPage() {
   const handleLogout = async () => {
     try {
       await apiRequest("POST", "/api/auth/logout");
-      setLocation("/");
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+      queryClient.setQueryData(["/api/auth/me"], null);
+      setLocation("/app/login");
     } catch {
       toast({ title: t.logoutFailed, variant: "destructive" });
     }
@@ -273,7 +275,7 @@ export default function DashboardPage() {
                       </>
                     ) : (
                       <>
-                        <Link href={`/team/${team.id}`} className="flex items-center gap-2 hover-elevate cursor-pointer rounded px-1 py-0.5">
+                        <Link href={`/app/team/${team.id}`} className="flex items-center gap-2 hover-elevate cursor-pointer rounded px-1 py-0.5">
                           <Users className="w-4 h-4 text-primary shrink-0" />
                           <span className="text-sm font-medium" data-testid={`text-team-name-${team.id}`}>{team.name}</span>
                           <ChevronRight className="w-3 h-3 text-muted-foreground" />
@@ -410,7 +412,7 @@ export default function DashboardPage() {
             {tournamentsList.map((tournament) => {
               const counts = getMatchCountForTournament(tournament.id);
               return (
-                <Link key={tournament.id} href={`/tournament/${tournament.id}`}>
+                <Link key={tournament.id} href={`/app/tournament/${tournament.id}`}>
                   <Card className="hover-elevate active-elevate-2 cursor-pointer" data-testid={`card-tournament-${tournament.id}`}>
                     <CardContent className="p-3">
                       <div className="flex items-center justify-between gap-2">

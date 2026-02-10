@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useI18n } from "@/lib/i18n";
-import { Activity, Lock, User, Languages } from "lucide-react";
+import { Link } from "wouter";
+import { Activity, Lock, User, Languages, ArrowLeft } from "lucide-react";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -28,7 +29,8 @@ export default function LoginPage() {
       const res = await apiRequest("POST", "/api/auth/login", { username, password });
       const data = await res.json();
       if (data.ok) {
-        setLocation("/dashboard");
+        queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+        setLocation("/app/dashboard");
       }
     } catch (err: any) {
       toast({ title: t.loginFailed, description: err.message, variant: "destructive" });
@@ -39,6 +41,14 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="absolute top-3 left-3">
+        <Link href="/">
+          <Button variant="ghost" size="sm" data-testid="button-back-to-home">
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            {lang === "zh" ? "首頁" : "Home"}
+          </Button>
+        </Link>
+      </div>
       <div className="absolute top-3 right-3">
         <Button variant="ghost" size="sm" onClick={toggleLang} data-testid="button-lang-toggle">
           <Languages className="w-4 h-4 mr-1" />

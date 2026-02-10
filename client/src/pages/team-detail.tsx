@@ -15,7 +15,7 @@ import type { Team, Player, TeamMember } from "@shared/schema";
 import { ArrowLeft, Plus, Trash2, Pencil, ArrowLeftRight, Languages, Users, Mail, ShieldCheck, X, Check, Download } from "lucide-react";
 
 export default function TeamDetailPage() {
-  const [, params] = useRoute("/team/:id");
+  const [, params] = useRoute("/app/team/:id");
   const teamId = params?.id ? parseInt(params.id) : 0;
   const { toast } = useToast();
   const { t, lang, toggleLang } = useI18n();
@@ -201,7 +201,7 @@ export default function TeamDetailPage() {
         <Card>
           <CardContent className="p-8 text-center space-y-3">
             <p className="text-muted-foreground">{t.matchNotFound}</p>
-            <Link href="/dashboard">
+            <Link href="/app/dashboard">
               <Button>{t.backToDashboard}</Button>
             </Link>
           </CardContent>
@@ -215,7 +215,7 @@ export default function TeamDetailPage() {
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="max-w-lg mx-auto flex items-center justify-between gap-2 px-4 py-2">
           <div className="flex items-center gap-2 min-w-0">
-            <Link href="/dashboard">
+            <Link href="/app/dashboard">
               <Button variant="ghost" size="icon" data-testid="button-back-to-dashboard">
                 <ArrowLeft className="w-4 h-4" />
               </Button>

@@ -24,7 +24,7 @@ import { useState } from "react";
 type FilterTab = "all" | "in_progress" | "completed";
 
 export default function TournamentDetailPage() {
-  const [, params] = useRoute("/tournament/:id");
+  const [, params] = useRoute("/app/tournament/:id");
   const tournamentId = params?.id ? parseInt(params.id) : 0;
   const { t, lang, toggleLang } = useI18n();
   const [filter, setFilter] = useState<FilterTab>("all");
@@ -79,7 +79,7 @@ export default function TournamentDetailPage() {
         <Card>
           <CardContent className="p-8 text-center space-y-3">
             <p className="text-muted-foreground">{t.matchNotFound}</p>
-            <Link href="/dashboard">
+            <Link href="/app/dashboard">
               <Button>{t.backToDashboard}</Button>
             </Link>
           </CardContent>
@@ -92,7 +92,7 @@ export default function TournamentDetailPage() {
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="max-w-3xl mx-auto flex items-center gap-2 px-4 py-2">
-          <Link href="/dashboard">
+          <Link href="/app/dashboard">
             <Button variant="ghost" size="icon" data-testid="button-back-to-dashboard">
               <ArrowLeft className="w-4 h-4" />
             </Button>
@@ -127,7 +127,7 @@ export default function TournamentDetailPage() {
       <main className="max-w-3xl mx-auto px-4 py-4 space-y-3">
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <h2 className="text-base font-semibold">{t.myMatches}</h2>
-          <Link href={`/tournament/${tournamentId}/match/new`}>
+          <Link href={`/app/tournament/${tournamentId}/match/new`}>
             <Button data-testid="button-new-match">
               <Plus className="w-4 h-4 mr-2" />
               {t.newMatch}
@@ -170,7 +170,7 @@ export default function TournamentDetailPage() {
         ) : (
           <div className="space-y-2">
             {filteredMatches.map((match) => (
-              <Link key={match.id} href={`/match/${match.id}/score`}>
+              <Link key={match.id} href={`/app/match/${match.id}/score`}>
                 <Card className="hover-elevate active-elevate-2 cursor-pointer" data-testid={`card-match-${match.id}`}>
                   <CardContent className="p-3">
                     <div className="flex items-center justify-between gap-2">
